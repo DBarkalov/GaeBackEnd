@@ -111,7 +111,7 @@ public class AtticleHeadersServlet extends HttpServlet {
 		if (headerEntity.hasProperty("time")) {
 			long time = (Long) headerEntity.getProperty("time");
 			long liveSec = (new Date().getTime() - time) * 1000;
-			if (liveSec < 60 * 5) { // ttl = 5 min
+			if (liveSec < 60) { // ttl = 1 min
 				((Text) headerEntity.getProperty("content")).getValue();
 			}
 		}
