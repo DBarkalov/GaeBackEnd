@@ -30,9 +30,9 @@ public class AtticleHeadersServlet extends HttpServlet {
 
 		final String page = req.getParameter("page");
 		final String url = "http://lsovet.ru/"	+ (page == null ? "" : "page/" + page + "/");
-		Key headerKey = KeyFactory.createKey(ATTICLE_HEADERS, url);
+		Key articleKey = KeyFactory.createKey(ATTICLE_HEADERS, url);
 
-		String content = getContentFromCache(headerKey);
+		String content = getContentFromCache(articleKey);
 		if (content != null) {
 			setOkResponce(resp, content);
 		} else {
@@ -48,7 +48,7 @@ public class AtticleHeadersServlet extends HttpServlet {
 				if (articles.size() > 0) {
 					content = createContent(articles);
 					setOkResponce(resp, content);
-					saveContentToCache(headerKey, content);
+					saveContentToCache(articleKey, content);
 				} else {
 					setErrorResponce(resp, 400, "parse data error");
 				}
@@ -92,7 +92,7 @@ public class AtticleHeadersServlet extends HttpServlet {
 
 	private void saveContentToCache(Key key, String content) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Entity entity = new Entity(ATTICLE_HEADERS, key);
+		Entity entity = new Entity(key);
 		entity.setProperty("content", new Text(content));
 		entity.setProperty("time", new Date().getTime());
 		datastore.put(entity);
