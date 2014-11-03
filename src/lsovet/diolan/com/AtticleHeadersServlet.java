@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -19,7 +18,6 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
-import com.google.appengine.api.users.User;
 
 @SuppressWarnings("serial")
 public class AtticleHeadersServlet extends HttpServlet {
@@ -94,7 +92,7 @@ public class AtticleHeadersServlet extends HttpServlet {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Entity entity = new Entity(key);
 		entity.setProperty("content", new Text(content));
-		entity.setProperty("time", new Date().getTime());
+		entity.setProperty("time", new Date());
 		datastore.put(entity);
 	}
 	
@@ -109,8 +107,8 @@ public class AtticleHeadersServlet extends HttpServlet {
 		}
 		// check entity ttl
 		if (headerEntity.hasProperty("time")) {
-			long time = (Long) headerEntity.getProperty("time");
-			long liveSec = (new Date().getTime() - time) * 1000;
+			Date time = (Date) headerEntity.getProperty("time");
+			long liveSec = (new Date().getTime() - time.getTime()) * 1000;
 			if (liveSec < 60) { // ttl = 1 min
 				((Text) headerEntity.getProperty("content")).getValue();
 			}
