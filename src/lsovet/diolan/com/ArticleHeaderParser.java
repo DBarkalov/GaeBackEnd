@@ -45,7 +45,7 @@ class ArticleHeaderParser{
 
     	String rawTitle = "<" +getOneTag(articleStr, titleStartTag, titleEndTag);
     	String link = getOneTag(rawTitle,"href=\"", "\">", false);
-    	String title = rawTitle.replaceAll(HTML_PATTERN,"").trim();
+    	String title = Util.unescapeHTML(rawTitle.replaceAll(HTML_PATTERN,"").trim()).trim();
     	
     	String rawDate = "<" +getOneTag(articleStr, dateStartTag, dateEndTag);
     	String date = rawDate.replaceAll(HTML_PATTERN, "").trim(); 
@@ -60,7 +60,7 @@ class ArticleHeaderParser{
     	String text = rawText.replaceAll(HTML_PATTERN, "").trim();
     	int endTitileIndex = text.indexOf(TITLE_END);
     	if(endTitileIndex != -1){
-    		text = text.substring(0, endTitileIndex);
+    		text = Util.unescapeHTML(text.substring(0, endTitileIndex)).replaceAll("[\n\r]", "").trim();
     	}
     	
     	ArticleHeader h = new ArticleHeader(serverId, title, date, author, thumbnail, text, link);
